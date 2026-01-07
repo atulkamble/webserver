@@ -91,7 +91,35 @@ usermod -aG apache ec2-user
 chmod 755 /var/www/html
 echo "<h1>Hello from $(hostname -f) webserver</h1>" > /var/www/html/index.html
 ```
+// AzureVM User Data Script 
+```
+#!/bin/bash
+apt update -y
+apt install apache2 -y
 
+systemctl start apache2
+systemctl enable apache2
+
+cat <<EOF > /var/www/html/index.html
+<html>
+<head>
+<title>Ubuntu Web Server</title>
+</head>
+<body>
+<h1>Apache Web Server Running</h1>
+<p>Access this server using the URL printed in logs</p>
+</body>
+</html>
+EOF
+
+HOST_IP=$(hostname -I | awk '{print $1}')
+
+echo "----------------------------------"
+echo "Web Server URL:"
+echo "http://$HOST_IP"
+echo "----------------------------------"
+
+```
 // Deploy Webserver on Azure VM
 // Task: Configuration of Webserver on Ubuntu Server 2022
 ```
